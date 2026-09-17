@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PokéSquad</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo">Poké<span class="logo-accent">Squad</span></div>
+    <form class="search-bar" id="cardSearch" role="search">
+      <svg class="search-bar__icon" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+        <circle cx="8.5" cy="8.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2" />
+        <line x1="13.4" y1="13.4" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+      <input type="search" class="search-bar__input" placeholder="Search Pokémon cards" aria-label="Search Pokémon cards" />
+    </form>
+  </header>
+
+  <main class="game-board">
+    <section class="pack-board">
+      <h2 class="section-label">Starting Lineup</h2>
+      <div class="starter-packs" id="starterPacks">
+        <!-- 6 starter packs, one per chosen type. data-type is set by main.js after setup;
+             placeholder types shown here just for layout. -->
+        <button class="pack pack--starter" data-slot="0" data-type="fire">
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__art"></span>
+          <span class="pack__type-label">Fire</span>
+        </button>
+        <button class="pack pack--starter" data-slot="1" data-type="water">
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__art"></span>
+          <span class="pack__type-label">Water</span>
+        </button>
+        <button class="pack pack--starter" data-slot="2" data-type="grass">
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__art"></span>
+          <span class="pack__type-label">Grass</span>
+        </button>
+        <button class="pack pack--starter" data-slot="3" data-type="electric">
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__art"></span>
+          <span class="pack__type-label">Electric</span>
+        </button>
+        <button class="pack pack--starter" data-slot="4" data-type="dark">
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__art"></span>
+          <span class="pack__type-label">Dark</span>
+        </button>
+        <button class="pack pack--starter" data-slot="5" data-type="psychic">
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__art"></span>
+          <span class="pack__type-label">Psychic</span>
+        </button>
+      </div>
+
+      <h2 class="section-label">Bench</h2>
+      <div class="bench-packs" id="benchPacks">
+        <!-- 8 grab-bag bench packs, no fixed type -->
+        <button class="pack pack--bench" data-slot="0">
+          <span class="pack__art"></span>
+          <span class="pack__bench-label">Bench</span>
+        </button>
+        <button class="pack pack--bench" data-slot="1">
+          <span class="pack__art"></span>
+          <span class="pack__bench-label">Bench</span>
+        </button>
+        <button class="pack pack--bench" data-slot="2">
+          <span class="pack__art"></span>
+          <span class="pack__bench-label">Bench</span>
+        </button>
+        <button class="pack pack--bench" data-slot="3">
+          <span class="pack__art"></span>
+          <span class="pack__bench-label">Bench</span>
+        </button>
+        <button class="pack pack--bench" data-slot="4">
+          <span class="pack__art"></span>
+          <span class="pack__bench-label">Bench</span>
+        </button>
+        <button class="pack pack--bench" data-slot="5">
+          <span class="pack__art"></span>
+          <span class="pack__bench-label">Bench</span>
+        </button>
+        <button class="pack pack--bench" data-slot="6">
+          <span class="pack__art"></span>
+          <span class="pack__bench-label">Bench</span>
+        </button>
+        <button class="pack pack--bench" data-slot="7">
+          <span class="pack__art"></span>
+          <span class="pack__bench-label">Bench</span>
+        </button>
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <h3 class="sidebar__title">Progress</h3>
+
+      <div class="sidebar__block">
+        <h4 class="sidebar__subtitle">Types Collected</h4>
+        <ul class="types-collected" id="typesCollected">
+          <!-- populated by main.js: one chip per chosen starter type -->
+        </ul>
+      </div>
+
+      <div class="sidebar__block sidebar__block--score">
+        <span class="squad-score__value" id="squadScoreValue">0</span>
+        <span class="squad-score__label">Squad Score</span>
+      </div>
+    </aside>
+  </main>
+
+  <script type="module" src="scripts/main.js"></script>
+</body>
+</html>
