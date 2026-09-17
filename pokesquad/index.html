@@ -7,6 +7,15 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="reveal-overlay" id="revealOverlay" hidden>
+    <div class="reveal-panel">
+      <h2 class="reveal-panel__title">Choose Your Card</h2>
+      <div class="reveal-cards" id="revealCards">
+        <!-- 5 candidate cards injected by main.js on pack open -->
+      </div>
+    </div>
+  </div>
+
   <header class="app-header">
     <div class="logo">Poké<span class="logo-accent">Squad</span></div>
     <form class="search-bar" id="cardSearch" role="search">

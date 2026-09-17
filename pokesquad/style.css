@@ -6,20 +6,44 @@
   --text-secondary: #8891b5;
   --accent: #7c8cff;
 
-  /* Pokémon type palette — used via data-type on .pack--starter.
-     Bench packs ignore this and use a fixed uniform gradient. */
+  /* Pokémon type palette — applied via [data-type] on both starter packs
+     and the type-select modal chips. Bench packs ignore this. */
+  --type-normal: #b7b79e;
+  --type-normal-dark: #52523f;
   --type-fire: #ff5a3c;
   --type-fire-dark: #7a1f10;
   --type-water: #3ba7ff;
   --type-water-dark: #0d3a63;
-  --type-grass: #4ad66d;
-  --type-grass-dark: #124a24;
   --type-electric: #ffd23f;
   --type-electric-dark: #7a5e00;
-  --type-dark: #7a5cff;
-  --type-dark-dark: #241a4d;
+  --type-grass: #4ad66d;
+  --type-grass-dark: #124a24;
+  --type-ice: #7fe0e0;
+  --type-ice-dark: #1d4a4a;
+  --type-fighting: #c1440e;
+  --type-fighting-dark: #5c1f05;
+  --type-poison: #a24bd1;
+  --type-poison-dark: #401a54;
+  --type-ground: #c9a227;
+  --type-ground-dark: #5c4a10;
+  --type-flying: #8fb8ff;
+  --type-flying-dark: #2c3b66;
   --type-psychic: #ff5cad;
   --type-psychic-dark: #591b3c;
+  --type-bug: #9bd13a;
+  --type-bug-dark: #3c4d12;
+  --type-rock: #9c8552;
+  --type-rock-dark: #443a22;
+  --type-ghost: #6c5ea3;
+  --type-ghost-dark: #29234a;
+  --type-dragon: #4f6bd8;
+  --type-dragon-dark: #1c2a63;
+  --type-dark: #7a5cff;
+  --type-dark-dark: #241a4d;
+  --type-steel: #9fb4c7;
+  --type-steel-dark: #3a4552;
+  --type-fairy: #ff9ed2;
+  --type-fairy-dark: #66234f;
 
   --bench-a: #3a4bdb;
   --bench-b: #7c3aed;
@@ -219,12 +243,24 @@ body {
     linear-gradient(160deg, var(--type-color, var(--accent)) 0%, var(--type-color-dark, var(--bg)) 100%);
 }
 
-.pack--starter[data-type="fire"] { --type-color: var(--type-fire); --type-color-dark: var(--type-fire-dark); }
-.pack--starter[data-type="water"] { --type-color: var(--type-water); --type-color-dark: var(--type-water-dark); }
-.pack--starter[data-type="grass"] { --type-color: var(--type-grass); --type-color-dark: var(--type-grass-dark); }
-.pack--starter[data-type="electric"] { --type-color: var(--type-electric); --type-color-dark: var(--type-electric-dark); }
-.pack--starter[data-type="dark"] { --type-color: var(--type-dark); --type-color-dark: var(--type-dark-dark); }
-.pack--starter[data-type="psychic"] { --type-color: var(--type-psychic); --type-color-dark: var(--type-psychic-dark); }
+[data-type="normal"] { --type-color: var(--type-normal); --type-color-dark: var(--type-normal-dark); }
+[data-type="fire"] { --type-color: var(--type-fire); --type-color-dark: var(--type-fire-dark); }
+[data-type="water"] { --type-color: var(--type-water); --type-color-dark: var(--type-water-dark); }
+[data-type="electric"] { --type-color: var(--type-electric); --type-color-dark: var(--type-electric-dark); }
+[data-type="grass"] { --type-color: var(--type-grass); --type-color-dark: var(--type-grass-dark); }
+[data-type="ice"] { --type-color: var(--type-ice); --type-color-dark: var(--type-ice-dark); }
+[data-type="fighting"] { --type-color: var(--type-fighting); --type-color-dark: var(--type-fighting-dark); }
+[data-type="poison"] { --type-color: var(--type-poison); --type-color-dark: var(--type-poison-dark); }
+[data-type="ground"] { --type-color: var(--type-ground); --type-color-dark: var(--type-ground-dark); }
+[data-type="flying"] { --type-color: var(--type-flying); --type-color-dark: var(--type-flying-dark); }
+[data-type="psychic"] { --type-color: var(--type-psychic); --type-color-dark: var(--type-psychic-dark); }
+[data-type="bug"] { --type-color: var(--type-bug); --type-color-dark: var(--type-bug-dark); }
+[data-type="rock"] { --type-color: var(--type-rock); --type-color-dark: var(--type-rock-dark); }
+[data-type="ghost"] { --type-color: var(--type-ghost); --type-color-dark: var(--type-ghost-dark); }
+[data-type="dragon"] { --type-color: var(--type-dragon); --type-color-dark: var(--type-dragon-dark); }
+[data-type="dark"] { --type-color: var(--type-dark); --type-color-dark: var(--type-dark-dark); }
+[data-type="steel"] { --type-color: var(--type-steel); --type-color-dark: var(--type-steel-dark); }
+[data-type="fairy"] { --type-color: var(--type-fairy); --type-color-dark: var(--type-fairy-dark); }
 
 .pack__type-label {
   position: relative;
@@ -348,4 +384,191 @@ body {
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* --- Pack opening: reveal overlay --- */
+
+.reveal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(6, 8, 16, 0);
+  backdrop-filter: blur(0px);
+  transition: background 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+.reveal-overlay[hidden] {
+  display: none;
+}
+
+.reveal-overlay.is-visible {
+  background: rgba(6, 8, 16, 0.78);
+  backdrop-filter: blur(4px);
+}
+
+.reveal-panel {
+  width: 100%;
+  max-width: 1180px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 0 40px rgba(124, 140, 255, 0.15);
+  transform: translateY(12px);
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.reveal-overlay.is-visible .reveal-panel {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.reveal-panel__title {
+  margin: 0 0 20px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.reveal-cards {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 22px;
+}
+
+@media (max-width: 720px) {
+  .reveal-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .reveal-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.reveal-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  aspect-ratio: 2 / 3;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px 10px;
+  overflow: hidden;
+  cursor: pointer;
+  font-family: inherit;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 2px,
+      transparent 2px,
+      transparent 10px
+    ),
+    linear-gradient(160deg, var(--type-color, var(--accent)) 0%, var(--type-color-dark, var(--bg)) 100%);
+
+  opacity: 0;
+  transform: scale(0.7) rotateY(90deg);
+  transition: transform 0.35s ease, opacity 0.3s ease, box-shadow 0.15s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-overlay.is-visible .reveal-card {
+  opacity: 1;
+  transform: scale(1) rotateY(0deg);
+}
+
+.reveal-card:hover {
+  box-shadow: 0 0 0 2px var(--type-color, var(--accent)), 0 0 20px 2px var(--type-color, var(--accent));
+}
+
+.reveal-card:disabled {
+  cursor: default;
+}
+
+.reveal-card.is-chosen {
+  box-shadow: 0 0 0 2px #fff, 0 0 26px 4px var(--type-color, var(--accent));
+}
+
+.reveal-card__rarity {
+  position: relative;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(11, 14, 26, 0.55);
+}
+
+.reveal-card__name {
+  position: relative;
+  font-size: 16px;
+  font-weight: 800;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.reveal-card__shiny {
+  position: relative;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffe27a;
+  text-shadow: 0 0 6px rgba(255, 226, 122, 0.8);
+}
+
+/* --- Opened pack result face --- */
+
+.pack.is-opened {
+  cursor: default;
+}
+
+.pack.is-opened:hover {
+  transform: none;
+}
+
+.pack__result-rarity {
+  position: relative;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(11, 14, 26, 0.55);
+}
+
+.pack__result-name {
+  position: relative;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.pack__result-shiny {
+  position: relative;
+  font-size: 14px;
+  filter: drop-shadow(0 0 6px rgba(255, 226, 122, 0.8));
+}
+
+.pack.is-opening {
+  animation: pack-shake 0.4s ease;
+}
+
+@keyframes pack-shake {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-2px) rotate(-2deg); }
+  75% { transform: translateY(-2px) rotate(2deg); }
 }
