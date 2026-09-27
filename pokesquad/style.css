@@ -6,48 +6,62 @@
   --text-secondary: #8891b5;
   --accent: #7c8cff;
 
-  /* Pokémon type palette — applied via [data-type] on both starter packs
-     and the type-select modal chips. Bench packs ignore this. */
-  --type-normal: #b7b79e;
-  --type-normal-dark: #52523f;
-  --type-fire: #ff5a3c;
-  --type-fire-dark: #7a1f10;
-  --type-water: #3ba7ff;
-  --type-water-dark: #0d3a63;
-  --type-electric: #ffd23f;
-  --type-electric-dark: #7a5e00;
-  --type-grass: #4ad66d;
-  --type-grass-dark: #124a24;
-  --type-ice: #7fe0e0;
-  --type-ice-dark: #1d4a4a;
-  --type-fighting: #c1440e;
-  --type-fighting-dark: #5c1f05;
-  --type-poison: #a24bd1;
-  --type-poison-dark: #401a54;
-  --type-ground: #c9a227;
-  --type-ground-dark: #5c4a10;
-  --type-flying: #8fb8ff;
-  --type-flying-dark: #2c3b66;
-  --type-psychic: #ff5cad;
-  --type-psychic-dark: #591b3c;
-  --type-bug: #9bd13a;
-  --type-bug-dark: #3c4d12;
-  --type-rock: #9c8552;
-  --type-rock-dark: #443a22;
-  --type-ghost: #6c5ea3;
-  --type-ghost-dark: #29234a;
-  --type-dragon: #4f6bd8;
-  --type-dragon-dark: #1c2a63;
-  --type-dark: #7a5cff;
-  --type-dark-dark: #241a4d;
-  --type-steel: #9fb4c7;
-  --type-steel-dark: #3a4552;
-  --type-fairy: #ff9ed2;
-  --type-fairy-dark: #66234f;
+  /* PC Box UI: flat muted gray-blue page chrome. Separate from --bg
+     (kept as-is — it's the fallback dark stop in pack/card gradients
+     and must not shift when the page background changes). */
+  --page-bg: #2c3140;
+  --panel-muted: #454c5e;
+  --panel-muted-tab: #525a6e;
+  --panel-muted-border: #5c6478;
 
-  --bench-a: #3a4bdb;
-  --bench-b: #7c3aed;
-  --bench-glow: #4fd8ff;
+  --font-display: "Baloo 2", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-pixel: "Press Start 2P", var(--font-display);
+
+  --retro-border: #98c8e8;
+  --retro-navy: #101a30;
+  --retro-navy-light: #182747;
+
+  /* Pokémon type palette — the widely-cited Bulbapedia/Veekun hex
+     values (used as the de facto standard across most fan projects),
+     each paired with a darkened shade of the same hue for the pack
+     gradient's end-color. Applied via [data-type] on starter packs. */
+  --type-normal: #a8a878;
+  --type-normal-dark: #4c4c36;
+  --type-fire: #f08030;
+  --type-fire-dark: #7a3d12;
+  --type-water: #6890f0;
+  --type-water-dark: #223d78;
+  --type-electric: #f8d030;
+  --type-electric-dark: #7a6300;
+  --type-grass: #78c850;
+  --type-grass-dark: #305c1e;
+  --type-ice: #98d8d8;
+  --type-ice-dark: #3d6969;
+  --type-fighting: #c03028;
+  --type-fighting-dark: #5c1410;
+  --type-poison: #a040a0;
+  --type-poison-dark: #4a1a4a;
+  --type-ground: #e0c068;
+  --type-ground-dark: #6b5726;
+  --type-flying: #a890f0;
+  --type-flying-dark: #493a78;
+  --type-psychic: #f85888;
+  --type-psychic-dark: #7a1f3d;
+  --type-bug: #a8b820;
+  --type-bug-dark: #4c5209;
+  --type-rock: #b8a038;
+  --type-rock-dark: #574b16;
+  --type-ghost: #705898;
+  --type-ghost-dark: #302547;
+  --type-dragon: #7038f8;
+  --type-dragon-dark: #2e1670;
+  --type-dark: #705848;
+  --type-dark-dark: #30251d;
+  --type-steel: #b8b8d0;
+  --type-steel-dark: #55556a;
+  --type-fairy: #ee99ac;
+  --type-fairy-dark: #7a3d49;
 }
 
 * {
@@ -57,23 +71,125 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg);
+  background: var(--page-bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
 }
+
+/* Subtle pixel-grid texture on the page background — reads as
+   texture, not a distraction. Fixed + pointer-events:none so it
+   never blocks clicks or scrolls with the page. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: repeating-linear-gradient(0deg, #fff 0px, #fff 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(90deg, #fff 0px, #fff 1px, transparent 1px, transparent 4px);
+  background-size: 4px 4px;
+}
+
+/* Faint CRT-style scanlines across the entire page, packs included —
+   a frame effect over everything, not a change to any element's own
+   styling. z-index above the reveal overlay so it reads through that
+   screen too. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 200;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.06) 0px,
+    rgba(0, 0, 0, 0.06) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+/* Retro pixel font for page chrome only — site header, section
+   titles, sidebar, buttons. Deliberately NOT applied to anything on
+   the packs themselves (labels/names), which stay on the rounded
+   display font since Press Start 2P is unreadable at that length. */
+h1,
+h2,
+h3,
+h4,
+.logo,
+.sidebar__title,
+.sidebar__subtitle,
+.section-label,
+.reveal-panel__title,
+.squad-score__value,
+.squad-score__label,
+.flip-all-btn,
+.hint-key,
+.hint-label {
+  font-family: var(--font-pixel);
+}
+
+/* Pack cards keep the rounded display font — untouched by the retro pass. */
+.pack__type-label,
+.pack__bench-label,
+.pack__result-name,
+.reveal-card__name,
+.reveal-card__logo {
+  font-family: var(--font-display);
+}
+
+/* --- PC Storage Box UI ---
+   Flat, muted, modular panels — no shell, no gloss. Matches the
+   classic Pokémon Box System screen: gray-blue panels with thin
+   borders and rounded-top tab headers, a localized teal glow around
+   the grid content instead of a device screen effect. */
 
 .app-header {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   padding: 20px 32px;
   border-bottom: 1px solid var(--panel-border);
 }
 
+/* Small flat, muted corner icon — a minimal nod to the reference's
+   dark circular Poké Ball icon, no gloss/gradient. */
+.header-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #262c3a;
+  border: 2px solid #454e63;
+  position: relative;
+}
+
+.header-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-top: 2px solid #454e63;
+  border-radius: 50% 50% 0 0;
+}
+
+.header-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1a1e28;
+  border: 2px solid #454e63;
+  transform: translate(-50%, -50%);
+}
+
 .logo {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-size: 15px;
+  line-height: 1.6;
+  letter-spacing: 0;
   flex-shrink: 0;
 }
 
@@ -81,23 +197,77 @@ body {
   color: var(--accent);
 }
 
+/* Box panel: the module wrapping Starting Lineup / Bench, styled
+   after the "Box 1" panel in the PC storage screen. */
+.box-panel {
+  background: var(--panel-muted);
+  border: 1px solid var(--panel-muted-border);
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.box-panel:last-child {
+  margin-bottom: 0;
+}
+
+.box-panel__tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px 16px;
+  background: var(--panel-muted-tab);
+  border-bottom: 1px solid var(--panel-muted-border);
+  border-radius: 9px 9px 0 0;
+}
+
+.box-panel__title {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.box-panel__arrow {
+  font-size: 16px;
+  line-height: 1;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+/* Localized inset teal glow around just the pack grid, not the page */
+.box-panel__body {
+  padding: 24px;
+  background: var(--bg);
+  border-radius: 0 0 9px 9px;
+  box-shadow: inset 0 0 0 1px rgba(45, 212, 191, 0.35), inset 0 0 26px rgba(45, 212, 191, 0.12);
+}
+
+/* Same dialogue-box treatment as the sidebar: dark navy fill, thin
+   outer line + gap + thick inner border, blocky corners. */
 .search-bar {
   display: flex;
   align-items: center;
   gap: 8px;
   flex: 0 1 300px;
-  margin-left: 24px;
-  padding: 9px 16px;
-  border-radius: 999px;
-  background: linear-gradient(160deg, rgba(124, 140, 255, 0.1), rgba(124, 140, 255, 0.03));
-  border: 1px solid rgba(124, 140, 255, 0.25);
-  box-shadow: 0 0 12px rgba(124, 140, 255, 0.12);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  margin: 2px 0 2px 26px;
+  padding: 8px 14px;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.65) 45%, transparent 48%) 5px 5px / 5px 5px no-repeat,
+    radial-gradient(circle, rgba(0, 0, 0, 0.65) 45%, transparent 48%) calc(100% - 5px) 5px / 5px 5px no-repeat,
+    radial-gradient(circle, rgba(0, 0, 0, 0.65) 45%, transparent 48%) 5px calc(100% - 5px) / 5px 5px no-repeat,
+    radial-gradient(circle, rgba(0, 0, 0, 0.65) 45%, transparent 48%) calc(100% - 5px) calc(100% - 5px) / 5px 5px
+      no-repeat,
+    var(--retro-navy);
+  border: 3px solid var(--retro-border);
+  outline: 1px solid var(--retro-border);
+  outline-offset: 2px;
+  border-radius: 0;
+  transition: border-color 0.15s ease, outline-color 0.15s ease;
 }
 
 .search-bar:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(124, 140, 255, 0.2), 0 0 16px rgba(124, 140, 255, 0.3);
+  border-color: #fff;
+  outline-color: #fff;
 }
 
 .search-bar__icon {
@@ -150,10 +320,10 @@ body {
 }
 
 .section-label {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 10px;
+  line-height: 1.8;
   text-transform: uppercase;
-  letter-spacing: 1.2px;
+  letter-spacing: 1px;
   color: var(--text-secondary);
   margin: 0 0 16px;
 }
@@ -193,21 +363,25 @@ body {
   }
 }
 
-/* --- Pack base --- */
+/* --- Pack base: reusable foil-pouch component ---
+   Shape and fold shading come from a real photo texture
+   (assets/textures/pack-shape-clean.png) layered over the type-color
+   gradient with mix-blend-mode: multiply — the texture's white/light
+   areas let the color show through, its dark fold-shadow areas darken
+   it, so only --type-color / --type-color-dark differ per pack. */
 
 .pack {
+  --pack-glow: 0 10px 20px rgba(0, 0, 0, 0.35);
+
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
   aspect-ratio: 2 / 3;
-  border-radius: 14px;
+  border-radius: 10px;
   border: none;
-  padding: 12px 8px;
+  padding: 0;
   cursor: pointer;
   overflow: hidden;
   font-family: inherit;
+  box-shadow: var(--pack-glow);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -219,29 +393,198 @@ body {
   transform: translateY(-1px);
 }
 
+.pack.is-opened {
+  cursor: default;
+}
+
+.pack.is-opened:hover {
+  transform: none;
+}
+
+/* --- Opening-pack overlay stage: an enlarged, centered clone of
+   whichever pack was clicked (colors/foil set at click time via JS),
+   shown inside #revealOverlay. It's built from a top/bottom half so
+   they can fly apart for the rip; each half's .pack__art/.pack__foil
+   is rendered at full pack height (200% of the half's own 50% height)
+   and top/bottom-aligned so it shows exactly its share of the same
+   gradient/texture — together they render as one seamless pack. */
+
+.opening-pack {
+  position: relative;
+  width: min(220px, 55vw);
+  aspect-ratio: 2 / 3;
+  margin: 0 auto 28px;
+  cursor: default;
+  overflow: visible;
+  box-shadow: none;
+}
+
+.opening-pack[hidden] {
+  display: none;
+}
+
+.opening-pack__crack {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: calc(50% - 3px);
+  height: 6px;
+  z-index: 2;
+  background: repeating-linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.95) 0px,
+    rgba(255, 255, 255, 0.95) 3px,
+    transparent 3px,
+    transparent 7px
+  );
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.opening-pack.is-cracking .opening-pack__crack {
+  opacity: 1;
+}
+
+.pack__half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  padding: 0 8px;
+}
+
+.pack__half--top {
+  top: 0;
+  height: 50%;
+  align-items: flex-start;
+  padding-top: 12px;
+  border-radius: 10px 10px 0 0;
+}
+
+.pack__half--bottom {
+  bottom: 0;
+  height: 50%;
+  align-items: flex-end;
+  padding-bottom: 12px;
+  border-radius: 0 0 10px 10px;
+}
+
 .pack__art {
   position: absolute;
   inset: 0;
-  border-radius: inherit;
+  background: linear-gradient(160deg, var(--type-color, var(--accent)) 0%, var(--type-color-dark, var(--bg)) 100%);
 }
 
-/* --- Starter packs: type-colored gradient + cracked foil texture --- */
-
-.pack--starter {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+.pack__foil {
+  position: absolute;
+  inset: 0;
+  background-image: url("assets/textures/pack-shape-clean.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  mix-blend-mode: multiply;
+  pointer-events: none;
 }
 
-.pack--starter .pack__art {
-  background:
-    repeating-linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.05) 0px,
-      rgba(255, 255, 255, 0.05) 2px,
-      transparent 2px,
-      transparent 10px
-    ),
-    linear-gradient(160deg, var(--type-color, var(--accent)) 0%, var(--type-color-dark, var(--bg)) 100%);
+.pack__half .pack__art,
+.pack__half .pack__foil {
+  left: 0;
+  right: 0;
+  height: 200%;
 }
+
+.pack__half--top .pack__art,
+.pack__half--top .pack__foil {
+  top: 0;
+  bottom: auto;
+}
+
+.pack__half--bottom .pack__art,
+.pack__half--bottom .pack__foil {
+  bottom: 0;
+  top: auto;
+}
+
+.pack__crown {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 18px;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
+}
+
+.pack__type-label,
+.pack__bench-label {
+  position: relative;
+}
+
+/* --- Open animation: shake -> rip -> reveal --- */
+
+@keyframes pack-shake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  15% { transform: translateX(-6px) rotate(-3deg); }
+  30% { transform: translateX(5px) rotate(2.5deg); }
+  45% { transform: translateX(-5px) rotate(-2deg); }
+  60% { transform: translateX(4px) rotate(2deg); }
+  75% { transform: translateX(-3px) rotate(-1deg); }
+  90% { transform: translateX(2px) rotate(1deg); }
+}
+
+.pack.is-shaking {
+  animation: pack-shake 0.6s ease-in-out;
+}
+
+@keyframes rip-top {
+  to {
+    transform: translateY(-70px) translateX(-14px) rotate(-10deg);
+    opacity: 0;
+  }
+}
+
+@keyframes rip-bottom {
+  to {
+    transform: translateY(70px) translateX(14px) rotate(10deg);
+    opacity: 0;
+  }
+}
+
+.pack.is-ripping .pack__half--top {
+  animation: rip-top 0.5s ease-in forwards;
+}
+
+.pack.is-ripping .pack__half--bottom {
+  animation: rip-bottom 0.5s ease-in forwards;
+}
+
+/* Reveal: the pulled card fades + scales in once it lands in the pack
+   slot. A CSS animation (not a transition+class toggle) so it always
+   plays on insertion — no risk of missing the first style/paint pass. */
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.pack__reveal {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  animation: reveal-in 0.35s ease forwards;
+}
+
+/* --- Starter packs --- */
 
 [data-type="normal"] { --type-color: var(--type-normal); --type-color-dark: var(--type-normal-dark); }
 [data-type="fire"] { --type-color: var(--type-fire); --type-color-dark: var(--type-fire-dark); }
@@ -263,7 +606,10 @@ body {
 [data-type="fairy"] { --type-color: var(--type-fairy); --type-color-dark: var(--type-fairy-dark); }
 
 .pack__type-label {
-  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text);
   font-size: 13px;
   font-weight: 800;
   text-transform: uppercase;
@@ -271,38 +617,73 @@ body {
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
-.pack__crown {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 18px;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
+.pack__type-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
 }
 
-/* Favorite-type pack: brighter glow + crown shown */
+/* Favorite-type pack: brighter glow + crown shown. Extends --pack-glow
+   so the base ambient shadow and the glow compose into one box-shadow. */
 .pack--starter.is-favorite {
-  box-shadow: 0 0 0 2px var(--type-color, var(--accent)), 0 0 24px 2px var(--type-color, var(--accent));
+  --pack-glow: 0 10px 20px rgba(0, 0, 0, 0.35), 0 0 0 2px var(--type-color, var(--accent)),
+    0 0 24px 2px var(--type-color, var(--accent));
 }
 
 .pack--starter.is-favorite .pack__crown {
   display: block;
 }
 
-/* --- Bench packs: uniform glowing style --- */
+/* --- Bench packs: mystery/premium holo treatment ---
+   Same .pack__foil fold-shading layer on top, unchanged — only what's
+   underneath it (this rule) differs from the starter recipe. */
 
 .pack--bench {
-  border: 1px solid var(--bench-glow);
-  box-shadow: 0 0 14px rgba(79, 216, 255, 0.35), 0 0 0 1px rgba(79, 216, 255, 0.15) inset;
+  --pack-glow: 0 10px 20px rgba(0, 0, 0, 0.35), 0 0 16px rgba(200, 170, 230, 0.4);
 }
 
 .pack--bench .pack__art {
   background:
-    radial-gradient(120% 60% at 50% 0%, rgba(255, 255, 255, 0.15), transparent 60%),
-    linear-gradient(160deg, var(--bench-a) 0%, var(--bench-b) 100%);
+    /* scattered sparkle/glint accents */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z' fill='white'/%3E%3C/svg%3E")
+      no-repeat 22% 20% / 10px 10px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z' fill='white'/%3E%3C/svg%3E")
+      no-repeat 74% 32% / 6px 6px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z' fill='white'/%3E%3C/svg%3E")
+      no-repeat 46% 54% / 8px 8px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z' fill='white'/%3E%3C/svg%3E")
+      no-repeat 80% 76% / 5px 5px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0 L12 8 L20 10 L12 12 L10 20 L8 12 L0 10 L8 8 Z' fill='white'/%3E%3C/svg%3E")
+      no-repeat 18% 82% / 7px 7px,
+    /* holographic prismatic gradient: pink -> purple -> blue -> green -> gold, low saturation */
+    linear-gradient(
+      120deg,
+      #e3b8cf 0%,
+      #c3b0e6 25%,
+      #a9cbe8 50%,
+      #aee0c4 75%,
+      #e8d9a8 100%
+    );
+}
+
+/* Small "capture orb" icon — an original round two-tone badge inspired
+   by a Poké Ball's silhouette, not its actual red/white trademark
+   colors or logo, to stay consistent with this project's no-official-
+   art rule. Subtle, corner-placed, not the focal point. */
+.pack__mystery-icon {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.55);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+  pointer-events: none;
 }
 
 .pack__bench-label {
-  position: relative;
+  color: var(--text);
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
@@ -313,33 +694,60 @@ body {
   border: 1px solid rgba(79, 216, 255, 0.5);
 }
 
-/* --- Sidebar --- */
+/* --- Sidebar: its own flat panel module, matching the box-panels —
+   rounded-top tab header (same visual weight as "Party" in the
+   reference), thin divider between blocks in the body. */
 
 .sidebar {
   width: 260px;
   flex-shrink: 0;
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: 14px;
+  align-self: flex-start;
+  background: var(--panel-muted);
+  border: 1px solid var(--panel-muted-border);
+  border-radius: 10px;
+}
+
+.sidebar__tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 16px;
+  background: var(--panel-muted-tab);
+  border-bottom: 1px solid var(--panel-muted-border);
+  border-radius: 9px 9px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.sidebar__tab-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.sidebar__body {
   padding: 20px;
 }
 
-.sidebar__title {
-  margin: 0 0 16px;
-  font-size: 16px;
-  font-weight: 800;
+.sidebar__block {
+  margin-bottom: 24px;
 }
 
-.sidebar__block {
-  margin-bottom: 20px;
+.sidebar__block:last-child {
+  margin-bottom: 0;
 }
 
 .sidebar__subtitle {
-  margin: 0 0 10px;
-  font-size: 12px;
-  font-weight: 700;
+  margin: 0 0 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--panel-muted-border);
+  font-size: 9px;
+  line-height: 1.6;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   color: var(--text-secondary);
 }
 
@@ -367,20 +775,21 @@ body {
   align-items: center;
   text-align: center;
   padding: 16px;
-  border-radius: 10px;
-  background: rgba(124, 140, 255, 0.08);
-  border: 1px solid var(--panel-border);
+  background: var(--bg);
+  border: 1px solid var(--panel-muted-border);
+  border-radius: 8px;
 }
 
 .squad-score__value {
-  font-size: 32px;
-  font-weight: 800;
+  font-size: 20px;
+  line-height: 1.8;
   color: var(--accent);
 }
 
 .squad-score__label {
-  margin-top: 4px;
-  font-size: 12px;
+  margin-top: 8px;
+  font-size: 8px;
+  line-height: 1.6;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -388,6 +797,9 @@ body {
 
 /* --- Pack opening: reveal overlay --- */
 
+/* Full-screen immersive pack-opening takeover: dark ground, slow
+   drifting crimson glow, floating particles — not a boxed modal that
+   leaves the page visible behind it. */
 .reveal-overlay {
   position: fixed;
   inset: 0;
@@ -395,10 +807,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  background: rgba(6, 8, 16, 0);
-  backdrop-filter: blur(0px);
-  transition: background 0.25s ease, backdrop-filter 0.25s ease;
+  overflow: hidden;
+  background: #0a0710;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .reveal-overlay[hidden] {
@@ -406,40 +818,92 @@ body {
 }
 
 .reveal-overlay.is-visible {
-  background: rgba(6, 8, 16, 0.78);
-  backdrop-filter: blur(4px);
+  opacity: 1;
 }
 
-.reveal-panel {
+.reveal-overlay::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(ellipse 40% 55% at 28% 45%, rgba(190, 20, 45, 0.4), transparent 60%),
+    radial-gradient(ellipse 35% 50% at 72% 55%, rgba(150, 15, 35, 0.32), transparent 60%);
+  animation: reveal-bg-drift 14s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes reveal-bg-drift {
+  0% {
+    transform: translate(-3%, -2%) scale(1);
+  }
+  100% {
+    transform: translate(3%, 2%) scale(1.1);
+  }
+}
+
+.reveal-overlay__particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.reveal-overlay__particle {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.7);
+  animation: particle-float 7s ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+@keyframes particle-float {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translateY(-18px);
+    opacity: 1;
+  }
+}
+
+.reveal-stage {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 1180px;
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: 18px;
   padding: 32px;
-  box-shadow: 0 0 40px rgba(124, 140, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
   transform: translateY(12px);
   opacity: 0;
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-.reveal-overlay.is-visible .reveal-panel {
+.reveal-overlay.is-visible .reveal-stage {
   transform: translateY(0);
   opacity: 1;
 }
 
 .reveal-panel__title {
-  margin: 0 0 20px;
+  margin: 0;
   text-align: center;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
+  font-size: 13px;
+  line-height: 1.8;
+  letter-spacing: 0;
 }
 
 .reveal-cards {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 22px;
+  width: 100%;
 }
 
 @media (max-width: 720px) {
@@ -454,22 +918,92 @@ body {
   }
 }
 
+/* --- Flip cards: start face-down, click to flip, click again (once
+   flipped) to choose it. A 3D rotateY flip on .reveal-card__inner;
+   the outer button only handles the pop-in entrance + glow/selection
+   states so the two transforms don't fight each other. */
+
 .reveal-card {
   position: relative;
+  aspect-ratio: 2 / 3;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  background: none;
+  perspective: 900px;
+
+  opacity: 0;
+  transform: scale(0.7);
+  transition: transform 0.35s ease, opacity 0.3s ease, box-shadow 0.15s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-overlay.is-visible .reveal-card {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.reveal-card:disabled {
+  cursor: default;
+}
+
+.reveal-card__inner {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0.1, 0.2, 1);
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px rgba(124, 140, 255, 0.4), 0 0 14px rgba(124, 140, 255, 0.25);
+}
+
+.reveal-card.is-flipped .reveal-card__inner {
+  transform: rotateY(180deg);
+}
+
+.reveal-card:hover .reveal-card__inner {
+  box-shadow: 0 0 0 2px var(--type-color, var(--accent)), 0 0 20px 2px var(--type-color, var(--accent));
+}
+
+.reveal-card.is-chosen .reveal-card__inner {
+  box-shadow: 0 0 0 2px #fff, 0 0 26px 4px var(--type-color, var(--accent));
+}
+
+.reveal-card__face {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
   gap: 6px;
-  aspect-ratio: 2 / 3;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 16px 10px;
+  border-radius: 14px;
   overflow: hidden;
-  cursor: pointer;
-  font-family: inherit;
-  background:
-    repeating-linear-gradient(
+  backface-visibility: hidden;
+}
+
+.reveal-card__face--back {
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 32%, rgba(124, 140, 255, 0.4), transparent 60%),
+    linear-gradient(160deg, #1b2140 0%, #0b0e1a 100%);
+}
+
+.reveal-card__logo {
+  font-size: 26px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -1px;
+  color: var(--text);
+  text-shadow: 0 0 14px rgba(124, 140, 255, 0.85);
+}
+
+.reveal-card__face--front {
+  transform: rotateY(180deg);
+  background: repeating-linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.05) 0px,
       rgba(255, 255, 255, 0.05) 2px,
@@ -477,32 +1011,11 @@ body {
       transparent 10px
     ),
     linear-gradient(160deg, var(--type-color, var(--accent)) 0%, var(--type-color-dark, var(--bg)) 100%);
-
-  opacity: 0;
-  transform: scale(0.7) rotateY(90deg);
-  transition: transform 0.35s ease, opacity 0.3s ease, box-shadow 0.15s ease;
-  transition-delay: var(--reveal-delay, 0ms);
-}
-
-.reveal-overlay.is-visible .reveal-card {
-  opacity: 1;
-  transform: scale(1) rotateY(0deg);
-}
-
-.reveal-card:hover {
-  box-shadow: 0 0 0 2px var(--type-color, var(--accent)), 0 0 20px 2px var(--type-color, var(--accent));
-}
-
-.reveal-card:disabled {
-  cursor: default;
-}
-
-.reveal-card.is-chosen {
-  box-shadow: 0 0 0 2px #fff, 0 0 26px 4px var(--type-color, var(--accent));
 }
 
 .reveal-card__rarity {
   position: relative;
+  color: var(--text);
   font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
@@ -514,6 +1027,7 @@ body {
 
 .reveal-card__name {
   position: relative;
+  color: var(--text);
   font-size: 16px;
   font-weight: 800;
   text-align: center;
@@ -528,18 +1042,75 @@ body {
   text-shadow: 0 0 6px rgba(255, 226, 122, 0.8);
 }
 
-/* --- Opened pack result face --- */
-
-.pack.is-opened {
-  cursor: default;
+.flip-all-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border: 3px solid #000;
+  border-radius: 0;
+  background: #fff;
+  color: #111;
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 #000;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-.pack.is-opened:hover {
-  transform: none;
+.flip-all-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 #000;
 }
+
+.flip-all-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 #000;
+}
+
+.flip-all-btn[hidden] {
+  display: none;
+}
+
+.reveal-controls-hint {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 1;
+  display: flex;
+  gap: 20px;
+}
+
+.reveal-controls-hint[hidden] {
+  display: none;
+}
+
+.hint-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hint-key {
+  padding: 5px 9px;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  font-size: 8px;
+  line-height: 1;
+  color: var(--text);
+}
+
+.hint-label {
+  font-size: 9px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* --- Opened pack result face (inside .pack__reveal) --- */
 
 .pack__result-rarity {
-  position: relative;
+  color: var(--text);
   font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
@@ -550,7 +1121,7 @@ body {
 }
 
 .pack__result-name {
-  position: relative;
+  color: var(--text);
   font-size: 13px;
   font-weight: 800;
   text-align: center;
@@ -558,17 +1129,6 @@ body {
 }
 
 .pack__result-shiny {
-  position: relative;
   font-size: 14px;
   filter: drop-shadow(0 0 6px rgba(255, 226, 122, 0.8));
-}
-
-.pack.is-opening {
-  animation: pack-shake 0.4s ease;
-}
-
-@keyframes pack-shake {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-2px) rotate(-2deg); }
-  75% { transform: translateY(-2px) rotate(2deg); }
 }

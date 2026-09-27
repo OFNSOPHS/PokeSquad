@@ -4,19 +4,64 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PokéSquad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Press+Start+2P&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="reveal-overlay" id="revealOverlay" hidden>
-    <div class="reveal-panel">
-      <h2 class="reveal-panel__title">Choose Your Card</h2>
+    <div class="reveal-overlay__particles" id="revealParticles" aria-hidden="true">
+      <!-- floating particle dots injected once by main.js -->
+    </div>
+
+    <div class="reveal-stage">
+      <!-- Stage 1: the clicked pack, enlarged and centered, plays
+           shake -> crack -> rip here before the card choices appear. -->
+      <div class="opening-pack pack" id="openingPack" hidden>
+        <span class="pack__half pack__half--top">
+          <span class="pack__art"></span>
+          <span class="pack__foil"></span>
+        </span>
+        <span class="opening-pack__crack"></span>
+        <span class="pack__half pack__half--bottom">
+          <span class="pack__art"></span>
+          <span class="pack__foil"></span>
+        </span>
+      </div>
+
+      <!-- Stage 2: flip and pick 1 of 5 rolled cards -->
+      <h2 class="reveal-panel__title" id="revealTitle" hidden>Choose Your Card</h2>
       <div class="reveal-cards" id="revealCards">
         <!-- 5 candidate cards injected by main.js on pack open -->
       </div>
+      <button class="flip-all-btn" id="flipAllBtn" type="button" hidden>
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <path
+            d="M4 10a6 6 0 0 1 10.24-4.24M16 10a6 6 0 0 1-10.24 4.24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+          <path d="M14 3v3.5h-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M6 17v-3.5h3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Flip All
+      </button>
+    </div>
+
+    <div class="reveal-controls-hint" id="revealControlsHint" hidden>
+      <span class="hint-item"><span class="hint-key">Click</span><span class="hint-label">Flip Card</span></span>
+      <span class="hint-item"><span class="hint-key">Space</span><span class="hint-label">Flip All Cards</span></span>
     </div>
   </div>
 
   <header class="app-header">
+    <span class="header-icon" aria-hidden="true"></span>
     <div class="logo">Poké<span class="logo-accent">Squad</span></div>
     <form class="search-bar" id="cardSearch" role="search">
       <svg class="search-bar__icon" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
@@ -29,93 +74,206 @@
 
   <main class="game-board">
     <section class="pack-board">
-      <h2 class="section-label">Starting Lineup</h2>
+      <div class="box-panel">
+        <div class="box-panel__tab">
+          <span class="box-panel__arrow" aria-hidden="true">&#8249;</span>
+          <h2 class="box-panel__title">Starting Lineup</h2>
+          <span class="box-panel__arrow" aria-hidden="true">&#8250;</span>
+        </div>
+        <div class="box-panel__body">
       <div class="starter-packs" id="starterPacks">
         <!-- 6 starter packs, one per chosen type. data-type is set by main.js after setup;
              placeholder types shown here just for layout. -->
         <button class="pack pack--starter" data-slot="0" data-type="fire">
-          <span class="pack__crown" hidden>👑</span>
           <span class="pack__art"></span>
-          <span class="pack__type-label">Fire</span>
+          <span class="pack__foil"></span>
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__type-label">
+            <svg class="pack__type-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M12 2c-1.9 3.6-6 6.2-6 11.4A6 6 0 0 0 12 22a6 6 0 0 0 6-8.6c-.3.9-1 1.7-1.8 2.1.4-2.4-.6-4.3-1.9-6.1.2 1.5-.2 2.6-1.2 3.5-.9-1-1-2.6-.5-4.2C13.2 6.6 12.6 4.2 12 2z"
+              />
+            </svg>
+            Fire
+          </span>
         </button>
         <button class="pack pack--starter" data-slot="1" data-type="water">
-          <span class="pack__crown" hidden>👑</span>
           <span class="pack__art"></span>
-          <span class="pack__type-label">Water</span>
+          <span class="pack__foil"></span>
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__type-label">
+            <svg class="pack__type-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2c4 5.6 7 9.7 7 13.2A7 7 0 0 1 5 15.2C5 11.7 8 7.6 12 2z" />
+            </svg>
+            Water
+          </span>
         </button>
         <button class="pack pack--starter" data-slot="2" data-type="grass">
-          <span class="pack__crown" hidden>👑</span>
           <span class="pack__art"></span>
-          <span class="pack__type-label">Grass</span>
+          <span class="pack__foil"></span>
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__type-label">
+            <svg class="pack__type-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M4 20C4 10 11 4 20 4c0 9-7 15-16 16z" />
+              <path d="M4 20 14 10" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" />
+            </svg>
+            Grass
+          </span>
         </button>
         <button class="pack pack--starter" data-slot="3" data-type="electric">
-          <span class="pack__crown" hidden>👑</span>
           <span class="pack__art"></span>
-          <span class="pack__type-label">Electric</span>
+          <span class="pack__foil"></span>
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__type-label">
+            <svg class="pack__type-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" />
+            </svg>
+            Electric
+          </span>
         </button>
         <button class="pack pack--starter" data-slot="4" data-type="dark">
-          <span class="pack__crown" hidden>👑</span>
           <span class="pack__art"></span>
-          <span class="pack__type-label">Dark</span>
+          <span class="pack__foil"></span>
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__type-label">
+            <svg class="pack__type-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z" />
+            </svg>
+            Dark
+          </span>
         </button>
         <button class="pack pack--starter" data-slot="5" data-type="psychic">
-          <span class="pack__crown" hidden>👑</span>
           <span class="pack__art"></span>
-          <span class="pack__type-label">Psychic</span>
+          <span class="pack__foil"></span>
+          <span class="pack__crown" hidden>👑</span>
+          <span class="pack__type-label">
+            <svg class="pack__type-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M12 5c-5.2 0-9.4 4.1-10.6 6.6a1 1 0 0 0 0 .8C2.6 14.9 6.8 19 12 19s9.4-4.1 10.6-6.6a1 1 0 0 0 0-.8C21.4 9.1 17.2 5 12 5zm0 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"
+              />
+              <circle cx="12" cy="12" r="1.8" />
+            </svg>
+            Psychic
+          </span>
         </button>
       </div>
+        </div>
+      </div>
 
-      <h2 class="section-label">Bench</h2>
+      <div class="box-panel">
+        <div class="box-panel__tab">
+          <span class="box-panel__arrow" aria-hidden="true">&#8249;</span>
+          <h2 class="box-panel__title">Bench</h2>
+          <span class="box-panel__arrow" aria-hidden="true">&#8250;</span>
+        </div>
+        <div class="box-panel__body">
       <div class="bench-packs" id="benchPacks">
         <!-- 8 grab-bag bench packs, no fixed type -->
         <button class="pack pack--bench" data-slot="0">
           <span class="pack__art"></span>
+          <svg class="pack__mystery-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="12" cy="12" r="1.5" fill="white" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+          <span class="pack__foil"></span>
           <span class="pack__bench-label">Bench</span>
         </button>
         <button class="pack pack--bench" data-slot="1">
           <span class="pack__art"></span>
+          <svg class="pack__mystery-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="12" cy="12" r="1.5" fill="white" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+          <span class="pack__foil"></span>
           <span class="pack__bench-label">Bench</span>
         </button>
         <button class="pack pack--bench" data-slot="2">
           <span class="pack__art"></span>
+          <svg class="pack__mystery-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="12" cy="12" r="1.5" fill="white" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+          <span class="pack__foil"></span>
           <span class="pack__bench-label">Bench</span>
         </button>
         <button class="pack pack--bench" data-slot="3">
           <span class="pack__art"></span>
+          <svg class="pack__mystery-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="12" cy="12" r="1.5" fill="white" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+          <span class="pack__foil"></span>
           <span class="pack__bench-label">Bench</span>
         </button>
         <button class="pack pack--bench" data-slot="4">
           <span class="pack__art"></span>
+          <svg class="pack__mystery-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="12" cy="12" r="1.5" fill="white" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+          <span class="pack__foil"></span>
           <span class="pack__bench-label">Bench</span>
         </button>
         <button class="pack pack--bench" data-slot="5">
           <span class="pack__art"></span>
+          <svg class="pack__mystery-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="12" cy="12" r="1.5" fill="white" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+          <span class="pack__foil"></span>
           <span class="pack__bench-label">Bench</span>
         </button>
         <button class="pack pack--bench" data-slot="6">
           <span class="pack__art"></span>
+          <svg class="pack__mystery-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="12" cy="12" r="1.5" fill="white" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+          <span class="pack__foil"></span>
           <span class="pack__bench-label">Bench</span>
         </button>
         <button class="pack pack--bench" data-slot="7">
           <span class="pack__art"></span>
+          <svg class="pack__mystery-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="12" cy="12" r="1.5" fill="white" stroke="currentColor" stroke-width="1.2" />
+          </svg>
+          <span class="pack__foil"></span>
           <span class="pack__bench-label">Bench</span>
         </button>
+      </div>
+        </div>
       </div>
     </section>
 
     <aside class="sidebar">
-      <h3 class="sidebar__title">Progress</h3>
+      <h3 class="sidebar__tab">
+        <span class="sidebar__tab-dot" aria-hidden="true"></span>
+        Progress
+      </h3>
 
-      <div class="sidebar__block">
-        <h4 class="sidebar__subtitle">Types Collected</h4>
-        <ul class="types-collected" id="typesCollected">
-          <!-- populated by main.js: one chip per chosen starter type -->
-        </ul>
-      </div>
+      <div class="sidebar__body">
+        <div class="sidebar__block">
+          <h4 class="sidebar__subtitle">Types Collected</h4>
+          <ul class="types-collected" id="typesCollected">
+            <!-- populated by main.js: one chip per chosen starter type -->
+          </ul>
+        </div>
 
-      <div class="sidebar__block sidebar__block--score">
-        <span class="squad-score__value" id="squadScoreValue">0</span>
-        <span class="squad-score__label">Squad Score</span>
+        <div class="sidebar__block sidebar__block--score">
+          <span class="squad-score__value" id="squadScoreValue">0</span>
+          <span class="squad-score__label">Squad Score</span>
+        </div>
       </div>
     </aside>
   </main>
